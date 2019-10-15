@@ -47,7 +47,7 @@ private $profileHash;
 **/
 private $profilePhone;
 /**
-* salt for profile password
+* salt for profile passwor
 *
 * @var $profileSalt
 */
