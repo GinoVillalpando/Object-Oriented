@@ -75,8 +75,8 @@ namespace GinoVillalpando\ObjectOriented;
 		 *
 		 * @return string value of the activation token
 		 */
-		public function getProfileActivationToken() : ?string {
-			return ($this->profileActivationToken);
+		public function getAuthorActivationToken() : ?string {
+			return ($this->authorActivationToken);
 		}
 		/**
 		 * mutator method for account activation token
@@ -86,28 +86,28 @@ namespace GinoVillalpando\ObjectOriented;
 		 * @throws \RangeException if the token is not exactly 32 characters
 		 * @throws \TypeError if the activation token is not a string
 		 */
-		public function setProfileActivationToken(?string $newProfileActivationToken): void {
-			if($newProfileActivationToken === null) {
-				$this->profileActivationToken = null;
+		public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
+			if($newAuthorActivationToken === null) {
+				$this->authorActivationToken = null;
 				return;
 			}
-			$newProfileActivationToken = strtolower(trim($newProfileActivationToken));
-			if(ctype_xdigit($newProfileActivationToken) === false) {
+			$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
+			if(ctype_xdigit($newAuthorActivationToken) === false) {
 				throw(new\RangeException("user activation is not valid"));
 			}
 //make sure user activation token is only 32 characters
-			if(strlen($newProfileActivationToken) !== 32) {
+			if(strlen($newAuthorActivationToken) !== 32) {
 				throw(new\RangeException("user activation token has to be 32"));
 			}
-			$this->profileActivationToken = $newProfileActivationToken;
+			$this->authorActivationToken = $newAuthorActivationToken;
 		}
 		/**
 		 * accessor method for at handle
 		 *
 		 * @return string value of at handle
 		 **/
-		public function getProfileAtHandle(): string {
-			return ($this->profileAtHandle);
+		public function getAuthorUsername(): ?string {
+			return ($this->authorUsername);
 		}
 		/**
 		 * mutator method for at handle
@@ -117,27 +117,27 @@ namespace GinoVillalpando\ObjectOriented;
 		 * @throws \RangeException if $newAtHandle is > 32 characters
 		 * @throws \TypeError if $newAtHandle is not a string
 		 **/
-		public function setProfileAtHandle(string $newProfileAtHandle) : void {
+		public function setAuthorUsername(string $newAuthorUsername) : void {
 // verify the at handle is secure
-			$newProfileAtHandle = trim($newProfileAtHandle);
-			$newProfileAtHandle = filter_var($newProfileAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			if(empty($newProfileAtHandle) === true) {
-				throw(new \InvalidArgumentException("profile at handle is empty or insecure"));
+			$newAuthorUsername = trim($newAuthorUsername);
+			$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+			if(empty($newAuthorUsername) === true) {
+				throw(new \InvalidArgumentException("Username is empty or insecure"));
 			}
 // verify the at handle will fit in the database
-			if(strlen($newProfileAtHandle) > 32) {
-				throw(new \RangeException("profile at handle is too large"));
+			if(strlen($newAuthorUsername) > 32) {
+				throw(new \RangeException("Username is too large"));
 			}
 // store the at handle
-			$this->profileAtHandle = $newProfileAtHandle;
+			$this->authorUsernamee = $newAuthorUsername;
 		}
 		/**
 		 * accessor method for email
 		 *
 		 * @return string value of email
 		 **/
-		public function getProfileEmail(): string {
-			return $this->profileEmail;
+		public function getAuthorEmail(): string {
+			return $this->authorEmail;
 		}
 		/**
 		 * mutator method for email
@@ -147,89 +147,88 @@ namespace GinoVillalpando\ObjectOriented;
 		 * @throws \RangeException if $newEmail is > 128 characters
 		 * @throws \TypeError if $newEmail is not a string
 		 **/
-		public function setProfileEmail(string $newProfileEmail): void {
+		public function setAuthorEmail(string $newAuthorEmail): void {
 // verify the email is secure
-			$newProfileEmail = trim($newProfileEmail);
-			$newProfileEmail = filter_var($newProfileEmail, FILTER_VALIDATE_EMAIL);
-			if(empty($newProfileEmail) === true) {
-				throw(new \InvalidArgumentException("profile email is empty or insecure"));
+			$newAuthorEmail = trim($newAuthorEmail);
+			$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
+			if(empty($newAuthorEmail) === true) {
+				throw(new \InvalidArgumentException("Author email is empty or insecure"));
 			}
 // verify the email will fit in the database
-			if(strlen($newProfileEmail) > 128) {
-				throw(new \RangeException("profile email is too large"));
+			if(strlen($newAuthorEmail) > 128) {
+				throw(new \RangeException("Author email is too large"));
 			}
 // store the email
-			$this->profileEmail = $newProfileEmail;
+			$this->profileEmail = $newAuthorEmail;
 		}
 		/**
 		 * accessor method for profileHash
 		 *
 		 * @return string value of hash
 		 */
-		public function getProfileHash(): string {
-			return $this->profileHash;
+		public function getAuthorHash(): string {
+			return $this->authorHash;
 		}
 
 		/**
 		 * mutator method for profile hash password
 		 *
-		 * @param string $newProfileHash
+		 * @param string $newAuthorHash
 		 * @throws \InvalidArgumentException if the hash is not secure
 		 * @throws \RangeException if the hash is not 128 characters
 		 * @throws \TypeError if profile hash is not a string
 		 */
-		public function setProfileHash(string $newProfileHash): void {
+		public function setAuthorHash(string $newAuthorHash): void {
 //enforce that the hash is properly formatted
-			$newProfileHash = trim($newProfileHash);
-			if(empty($newProfileHash) === true) {
+			$newAuthorHash = trim($newAuthorHash);
+			if(empty($newAuthorHash) === true) {
 				throw(new \InvalidArgumentException("profile password hash empty or insecure"));
 			}
 //enforce the hash is really an Argon hash
-			$profileHashInfo = password_get_info($newProfileHash);
-			if($profileHashInfo["algoName"] !== "argon2i") {
+			$authorHashInfo = password_get_info($newAuthorHash);
+			if($authorHashInfo["algoName"] !== "argon2i") {
 				throw(new \InvalidArgumentException("profile hash is not a valid hash"));
 			}
 //enforce that the hash is exactly 97 characters.
-			if(strlen($newProfileHash) !== 97) {
+			if(strlen($newAuthorHash) !== 97) {
 				throw(new \RangeException("profile hash must be 97 characters"));
 			}
 //store the hash
-			$this->profileHash = $newProfileHash;
+			$this->authorHash = $newAuthorHash;
 		}
 		/**
 		 * accessor method for phone
 		 *
 		 * @return string value of phone or null
 		 **/
-		public function getProfilePhone(): ?string {
-			return ($this->profilePhone);
+		public function getAuthorAvatarUrl(): ?string {
+			return ($this->authorAvatarUrl);
 		}
 		/**
 		 * mutator method for phone
 		 *
-		 * @param string $newProfilePhone new value of phone
+		 * @param string $newAuthorAvatarUrl new value of phone
 		 * @throws \InvalidArgumentException if $newPhone is not a string or insecure
 		 * @throws \RangeException if $newPhone is > 32 characters
 		 * @throws \TypeError if $newPhone is not a string
 		 **/
-		public function setProfilePhone(?string $newProfilePhone): void {
+		public function setAuthorAvatarUrl(?string $newAuthorAvatarUrl): void {
 //if $profilePhone is null return it right away
-			if($newProfilePhone === null) {
-				$this->profilePhone = null;
+			if($newAuthorAvatarUrl === null) {
+				$this->authorAvatarUrl = null;
 				return;
 			}
 // verify the phone is secure
-			$newProfilePhone = trim($newProfilePhone);
-			$newProfilePhone = filter_var($newProfilePhone, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			if(empty($newProfilePhone) === true) {
-				throw(new \InvalidArgumentException("profile phone is empty or insecure"));
+			$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
+			$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+			if(empty($newAuthorAvatarUrl) === true) {
+				throw(new \InvalidArgumentException("Avatar URL is empty or insecure"));
 			}
 // verify the phone will fit in the database
-			if(strlen($newProfilePhone) > 32) {
-				throw(new \RangeException("profile phone is too large"));
+			if(strlen($newAuthorAvatarUrl) > 255) {
+				throw(new \RangeException("Avatar is too large"));
 			}
 // store the phone
-			$this->profilePhone = $newProfilePhone;
+			$this->authorAvatarUrl = $newAuthorAvatarUrl;
 		}
 	}
-}
