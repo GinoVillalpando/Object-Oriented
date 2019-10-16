@@ -2,7 +2,7 @@
 
 namespace GinoVillalpando\ObjectOriented;
 
-	require_once(dirname(__DIR__, 2) . "/Classes/autoload.php");
+	require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 	use Ramsey\Uuid\Uuid;
 	/**
@@ -21,12 +21,12 @@ namespace GinoVillalpando\ObjectOriented;
 		private $authorId;
 		/**
 		 * token handed out to verify that the author is valid and not malicious.
-		 *v@var $authorActivationToken
+		 *@var $authorActivationToken
 		 **/
 		private $authorActivationToken;
 		/**
-		 * phone number for this author
-		 * @var string $Phone
+		 * Avatar for this author
+		 * @var string $Avatar
 		 **/
 		private $authorAvatarUrl;
 		/**
