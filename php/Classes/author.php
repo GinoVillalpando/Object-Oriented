@@ -199,7 +199,7 @@ namespace GinoVillalpando\ObjectOriented;
 		/**
 		 * accessor method for phone
 		 *
-		 * @return string value of phone or null
+		 * @return string value of phone or nul
 		 **/
 		public function getAuthorAvatarUrl(): ?string {
 			return ($this->authorAvatarUrl);
