@@ -2,11 +2,11 @@
 
 namespace GinoVillalpando\ObjectOriented;
 
-	require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+	require_once(dirname(__DIR__, 2) . "/Classes/autoload.php");
 
 	use Ramsey\Uuid\Uuid;
 	/**
-	 * Cross Section of a Author Profile
+	 * Cross Section of a Author author
 	 *
 	 * This is a cross section of what is probably stored about an author. This entity is a top level entity that
 	 * holds the keys to the other entities.
@@ -16,49 +16,49 @@ namespace GinoVillalpando\ObjectOriented;
 		use ValidateUuid;
 		/**
 		 * id for this author; this is the primary key
-		 * @var Uuid $profileId
+		 * @var Uuid $authorId
 		 **/
 		private $authorId;
 		/**
-		 * token handed out to verify that the profile is valid and not malicious.
-		 *v@var $profileActivationToken
+		 * token handed out to verify that the author is valid and not malicious.
+		 *v@var $authorActivationToken
 		 **/
 		private $authorActivationToken;
 		/**
-		 * phone number for this Profile
-		 * @var string $profilePhone
+		 * phone number for this author
+		 * @var string $Phone
 		 **/
 		private $authorAvatarUrl;
 		/**
-		 * email for this Profile; this is a unique index
-		 * @var string $profileEmail
+		 * email for this author; this is a unique index
+		 * @var string $authorEmail
 		 **/
 		private $authorEmail;
 		/**
-		 * hash for profile password
-		 * @var $profileHash
+		 * hash for author password
+		 * @var $authorHash
 		 **/
 		private $authorHash;
 		/**
-		 * at handle for this Profile; this is a unique index
-		 * @var string $profileAtHandle
+		 * at handle for this author; this is a unique index
+		 * @var string $authorAtHandle
 		 **/
 		private $authorUsername;
 
 		/**
-		 * accessor method for profile id
+		 * accessor method for author id
 		 *
-		 * @return Uuid value of profile id (or null if new Profile)
+		 * @return Uuid value of author id (or null if new author)
 		 **/
 		public function getAuthorId(): Uuid {
 			return ($this->authorId);
 		}
 		/**
-		 * mutator method for profile id
+		 * mutator method for author id
 		 *
-		 * @param  Uuid| string $newProfileId value of new profile id
-		 * @throws \RangeException if $newProfileId is not positive
-		 * @throws \TypeError if the profile Id is not
+		 * @param  Uuid| string $newAuthorId value of new author id
+		 * @throws \RangeException if $newAuthorId is not positive
+		 * @throws \TypeError if the author Id is not
 		 **/
 		public function setAuthorId( $newAuthorId): void {
 			try {
@@ -67,7 +67,7 @@ namespace GinoVillalpando\ObjectOriented;
 				$exceptionType = get_class($exception);
 				throw(new $exceptionType($exception->getMessage(), 0, $exception));
 			}
-// convert and store the profile id
+// convert and store the author id
 			$this->authorId = $uuid;
 		}
 		/**
@@ -81,7 +81,7 @@ namespace GinoVillalpando\ObjectOriented;
 		/**
 		 * mutator method for account activation token
 		 *
-		 * @param string $newProfileActivationToken
+		 * @param string $newAuthorActivationToken
 		 * @throws \InvalidArgumentException  if the token is not a string or insecure
 		 * @throws \RangeException if the token is not exactly 32 characters
 		 * @throws \TypeError if the activation token is not a string
@@ -112,7 +112,7 @@ namespace GinoVillalpando\ObjectOriented;
 		/**
 		 * mutator method for at handle
 		 *
-		 * @param string $newProfileAtHandle new value of at handle
+		 * @param string $newAuthorAtHandle new value of at handle
 		 * @throws \InvalidArgumentException if $newAtHandle is not a string or insecure
 		 * @throws \RangeException if $newAtHandle is > 32 characters
 		 * @throws \TypeError if $newAtHandle is not a string
@@ -142,7 +142,7 @@ namespace GinoVillalpando\ObjectOriented;
 		/**
 		 * mutator method for email
 		 *
-		 * @param string $newProfileEmail new value of email
+		 * @param string $newAuthorEmail new value of email
 		 * @throws \InvalidArgumentException if $newEmail is not a valid email or insecure
 		 * @throws \RangeException if $newEmail is > 128 characters
 		 * @throws \TypeError if $newEmail is not a string
@@ -159,10 +159,10 @@ namespace GinoVillalpando\ObjectOriented;
 				throw(new \RangeException("Author email is too large"));
 			}
 // store the email
-			$this->profileEmail = $newAuthorEmail;
+			$this->authorEmail = $newAuthorEmail;
 		}
 		/**
-		 * accessor method for profileHash
+		 * accessor method for authorHash
 		 *
 		 * @return string value of hash
 		 */
@@ -171,27 +171,27 @@ namespace GinoVillalpando\ObjectOriented;
 		}
 
 		/**
-		 * mutator method for profile hash password
+		 * mutator method for author hash password
 		 *
 		 * @param string $newAuthorHash
 		 * @throws \InvalidArgumentException if the hash is not secure
 		 * @throws \RangeException if the hash is not 128 characters
-		 * @throws \TypeError if profile hash is not a string
+		 * @throws \TypeError if author hash is not a string
 		 */
 		public function setAuthorHash(string $newAuthorHash): void {
 //enforce that the hash is properly formatted
 			$newAuthorHash = trim($newAuthorHash);
 			if(empty($newAuthorHash) === true) {
-				throw(new \InvalidArgumentException("profile password hash empty or insecure"));
+				throw(new \InvalidArgumentException("author password hash empty or insecure"));
 			}
 //enforce the hash is really an Argon hash
 			$authorHashInfo = password_get_info($newAuthorHash);
 			if($authorHashInfo["algoName"] !== "argon2i") {
-				throw(new \InvalidArgumentException("profile hash is not a valid hash"));
+				throw(new \InvalidArgumentException("author hash is not a valid hash"));
 			}
 //enforce that the hash is exactly 97 characters.
 			if(strlen($newAuthorHash) !== 97) {
-				throw(new \RangeException("profile hash must be 97 characters"));
+				throw(new \RangeException("author hash must be 97 characters"));
 			}
 //store the hash
 			$this->authorHash = $newAuthorHash;
@@ -213,7 +213,7 @@ namespace GinoVillalpando\ObjectOriented;
 		 * @throws \TypeError if $newPhone is not a string
 		 **/
 		public function setAuthorAvatarUrl(?string $newAuthorAvatarUrl): void {
-//if $profilePhone is null return it right away
+//if $authorPhone is null return it right away
 			if($newAuthorAvatarUrl === null) {
 				$this->authorAvatarUrl = null;
 				return;
