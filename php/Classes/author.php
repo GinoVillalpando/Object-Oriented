@@ -2,7 +2,7 @@
 
 namespace GinoVillalpando\ObjectOriented;
 
-require_once(dirname(__DIR__, 2) . "/Classes/autoload.php");
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
 use Exception;
 use InvalidArgumentException;
@@ -24,32 +24,32 @@ class author implements \JsonSerializable {
 	 * id for this author; this is the primary key
 	 * @var Uuid $authorId
 	 **/
-	private $authorId;
+	private Uuid $authorId;
 	/**
 	 * token handed out to verify that the author is valid and not malicious.
-	 * @var $authorActivationToken
+	 * @var int $authorActivationToken
 	 **/
-	private $authorActivationToken;
+	private int $authorActivationToken;
 	/**
 	 * Avatar for this author
-	 * @var string $Avatar
+	 * @var string $AvatarUrl
 	 **/
-	private $authorAvatarUrl;
+	private string $authorAvatarUrl;
 	/**
 	 * email for this author; this is a unique index
 	 * @var string $authorEmail
 	 **/
-	private $authorEmail;
+	private string $authorEmail;
 	/**
 	 * hash for author password
-	 * @var $authorHash
+	 * @var string $authorHash
 	 **/
-	private $authorHash;
+	private string $authorHash;
 	/**
 	 * at handle for this author; this is a unique index
 	 * @var string $authorAtHandle
 	 **/
-	private $authorUsername;
+	private string $authorUsername;
 
 	/**
 	 * constructor for this author
