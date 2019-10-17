@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * holds the keys to the other entities.
  *
  **/
-class author {
+class author implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * id for this author; this is the primary key
@@ -63,17 +63,20 @@ class author {
 	 */
 	public function __construct($newAuthorId, $newAuthorActivationToken, $newAuthorAvatarUrl, $newAuthorEmail, $newAuthorHash, $newAuthorUsername) {
 		try {
-			$this->getAuthorId($newAuthorId);
-			$this->getAuthorActivationToken($newAuthorActivationToken);
-			$this->getAuthorAvatarUrl($newAuthorAvatarUrl);
-			$this->getAuthorEmail($newAuthorEmail);
-			$this->getAuthorHash($newAuthorHash);
-			$this->getAuthorUsername($newAuthorUsername);
-		} catch(UnexpectedValueException $exception) {
-			// rethrow to the caller
-			throw(new UnexpectedValueException("Unable to construct author", 0, $exception));
+			$this->setAuthorId($newAuthorId);
+			$this->setAuthorActivationToken($newAuthorActivationToken);
+			$this->setAuthorAvatarUrl($newAuthorAvatarUrl);
+			$this->setAuthorEmail($newAuthorEmail);
+			$this->setAuthorHash($newAuthorHash);
+			$this->setAuthorUsername($newAuthorUsername);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+
+			//determine what exception type was thrown
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage("Unable to construct author"), 0, $exception));
 		}
 	}
+
 	/**
 	 * accessor method for author id
 	 *
@@ -82,14 +85,20 @@ class author {
 	public function getAuthorId(): Uuid {
 		return ($this->authorId);
 	}
+
 	/**
 	 * mutator method for author id
 	 *
-	 * @param  Uuid| string $newAuthorId value of new author id
+	 * @param Uuid| string $newAuthorId value of new author id
 	 * @throws RangeException if $newAuthorId is not positive
 	 * @throws TypeError if the author Id is not
 	 **/
-	public function setAuthorId ($newAuthorId): void {
+	public function setAuthorId($newAuthorId): void {
+		$newAuthorId = filter_var($newAuthorId, FILTER_VALIDATE_INT);
+		if($newAuthorId === false) {
+			throw(new UnexpectedValueException("author id is not a valid integer"));
+		}
+
 		try {
 			$uuid = self::validateUuid($newAuthorId);
 		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
@@ -98,15 +107,18 @@ class author {
 		}
 // convert and store the author id
 		$this->authorId = $uuid;
+		$this->authorId = intval($newAuthorId);
 	}
+
 	/**
 	 * accessor method for account activation token
 	 *
 	 * @return string value of the activation token
 	 */
-	public function getAuthorActivationToken() : ?string {
+	public function getAuthorActivationToken(): ?string {
 		return ($this->authorActivationToken);
 	}
+
 	/**
 	 * mutator method for account activation token
 	 *
@@ -122,16 +134,17 @@ class author {
 		}
 		$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
 		if(ctype_xdigit($newAuthorActivationToken) === false) {
-			throw(newRangeException("user activation is not valid"));
+			throw(new RangeException("user activation is not valid"));
 		}
 //make sure user activation token is only 32 characters
 		if(strlen($newAuthorActivationToken) !== 32) {
-			throw(newRangeException("user activation token has to be 32"));
+			throw(new RangeException("user activation token has to be 32"));
 		}
 		$this->authorActivationToken = $newAuthorActivationToken;
 	}
+
 	/**
-	/**
+	 * /**
 	 * accessor method for email
 	 *
 	 * @return string value of email
@@ -139,6 +152,7 @@ class author {
 	public function getAuthorEmail(): string {
 		return $this->authorEmail;
 	}
+
 	/**
 	 * accessor method for avatar
 	 *
@@ -147,6 +161,7 @@ class author {
 	public function getAuthorAvatarUrl(): ?string {
 		return ($this->authorAvatarUrl);
 	}
+
 	/**
 	 * mutator method for avatar
 	 *
@@ -174,6 +189,7 @@ class author {
 // store the avatar
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	}
+
 	/**
 	 * mutator method for email
 	 *
@@ -196,6 +212,7 @@ class author {
 // store the email
 		$this->authorEmail = $newAuthorEmail;
 	}
+
 	/**
 	 * accessor method for authorHash
 	 *
@@ -231,6 +248,7 @@ class author {
 //store the hash
 		$this->authorHash = $newAuthorHash;
 	}
+
 	/** accessor method for at handle
 	 *
 	 * @return string value of at handle
@@ -244,7 +262,7 @@ class author {
 	 *
 	 * @param string $newAuthorUsername
 	 */
-	public function setAuthorUsername(string $newAuthorUsername) : void {
+	public function setAuthorUsername(string $newAuthorUsername): void {
 		// verify the at handle is secure
 		$newAuthorUsername = trim($newAuthorUsername);
 		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -256,6 +274,12 @@ class author {
 			throw(new RangeException("Username is too large"));
 		}
 		// store the at handle
-		$this->authorUsernamee = $newAuthorUsername;
+		$this->authorUsername = $newAuthorUsername;
+	}
+	public function jsonSerialize() {
+		$fields = get_object_vars($this);
+		$fields["authorId"] = $this->authorId->toString();
+		unset($fields["authorHash"]);
+		return ($fields);
 	}
 }
