@@ -1,6 +1,6 @@
 <?php
 namespace GinoVillalpando\ObjectOriented;
-require_once(dirname(__DIR__, 2) . "/Classes/autoload.php");
+require_once(dirname(__DIR__, 1) . "/Classes/autoload.php");
 
 use InvalidArgumentException;
 use \Ramsey\Uuid\Uuid;

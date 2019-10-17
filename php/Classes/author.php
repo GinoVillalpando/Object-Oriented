@@ -2,17 +2,13 @@
 
 namespace GinoVillalpando\ObjectOriented;
 
-require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+require_once ("autoload.php");
+require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 
-use Exception;
-use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
-use RangeException;
-use TypeError;
-use UnexpectedValueException;
 
 /**
- * Cross Section of a Author author
+ * Cross Section of a Author
  *
  * This is a cross section of what is probably stored about an author. This entity is a top level entity that
  * holds the keys to the other entities.
@@ -22,34 +18,34 @@ class author implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * id for this author; this is the primary key
-	 * @var Uuid $authorId
+	 * @var uuid $authorId
 	 **/
-	private Uuid $authorId;
+	private $authorId;
 	/**
 	 * token handed out to verify that the author is valid and not malicious.
-	 * @var int $authorActivationToken
+	 * @var  $authorActivationToken
 	 **/
-	private int $authorActivationToken;
+	private $authorActivationToken;
 	/**
 	 * Avatar for this author
-	 * @var string $AvatarUrl
+	 * @var  $AvatarUrl
 	 **/
-	private string $authorAvatarUrl;
+	private $authorAvatarUrl;
 	/**
 	 * email for this author; this is a unique index
-	 * @var string $authorEmail
+	 * @var  $authorEmail
 	 **/
-	private string $authorEmail;
+	private $authorEmail;
 	/**
 	 * hash for author password
-	 * @var string $authorHash
+	 * @var  $authorHash
 	 **/
-	private string $authorHash;
+	private $authorHash;
 	/**
 	 * at handle for this author; this is a unique index
-	 * @var string $authorAtHandle
+	 * @var  $authorAtHandle
 	 **/
-	private string $authorUsername;
+	private $authorUsername;
 
 	/**
 	 * constructor for this author
@@ -61,7 +57,7 @@ class author implements \JsonSerializable {
 	 * @param string $newAuthorUsername new Username
 	 * @throws UnexpectedValueException if any of the parameters are invalid
 	 */
-	public function __construct($newAuthorId, $newAuthorActivationToken, $newAuthorAvatarUrl, $newAuthorEmail, $newAuthorHash, $newAuthorUsername) {
+	public function __construct($newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail, string $newAuthorHash, ?string $newAuthorUsername) {
 		try {
 			$this->setAuthorId($newAuthorId);
 			$this->setAuthorActivationToken($newAuthorActivationToken);
