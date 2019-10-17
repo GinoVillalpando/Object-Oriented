@@ -1,8 +1,10 @@
 <?php
 namespace GinoVillalpando\ObjectOriented;
+
+require_once ("autoload.php");
+
 require_once(dirname(__DIR__, 1) . "/Classes/autoload.php");
 
-use InvalidArgumentException;
 use \Ramsey\Uuid\Uuid;
 /**
  * Trait to validate a uuid

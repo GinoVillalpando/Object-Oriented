@@ -18,32 +18,32 @@ class author implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * id for this author; this is the primary key
-	 * @var uuid $authorId
+	 * @var Uuid $authorId
 	 **/
 	private $authorId;
 	/**
 	 * token handed out to verify that the author is valid and not malicious.
-	 * @var  $authorActivationToken
+	 * @var string $authorActivationToken
 	 **/
 	private $authorActivationToken;
 	/**
 	 * Avatar for this author
-	 * @var  $AvatarUrl
+	 * @var string $AvatarUrl
 	 **/
 	private $authorAvatarUrl;
 	/**
 	 * email for this author; this is a unique index
-	 * @var  $authorEmail
+	 * @var string $authorEmail
 	 **/
 	private $authorEmail;
 	/**
 	 * hash for author password
-	 * @var  $authorHash
+	 * @var string $authorHash
 	 **/
 	private $authorHash;
 	/**
 	 * at handle for this author; this is a unique index
-	 * @var  $authorAtHandle
+	 * @var string $authorAtHandle
 	 **/
 	private $authorUsername;
 
@@ -92,7 +92,7 @@ class author implements \JsonSerializable {
 	public function setAuthorId($newAuthorId): void {
 		$newAuthorId = filter_var($newAuthorId, FILTER_VALIDATE_INT);
 		if($newAuthorId === false) {
-			throw(new \UnexpectedValueException("author id is not a valid integer"));
+			throw(new UnexpectedValueException("author id is not a valid integer"));
 		}
 
 		try {
