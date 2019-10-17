@@ -92,12 +92,12 @@ class author implements \JsonSerializable {
 	public function setAuthorId($newAuthorId): void {
 		$newAuthorId = filter_var($newAuthorId, FILTER_VALIDATE_INT);
 		if($newAuthorId === false) {
-			throw(new UnexpectedValueException("author id is not a valid integer"));
+			throw(new \UnexpectedValueException("author id is not a valid integer"));
 		}
 
 		try {
 			$uuid = self::validateUuid($newAuthorId);
-		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
@@ -130,11 +130,11 @@ class author implements \JsonSerializable {
 		}
 		$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
 		if(ctype_xdigit($newAuthorActivationToken) === false) {
-			throw(new RangeException("user activation is not valid"));
+			throw(new \RangeException("user activation is not valid"));
 		}
 //make sure user activation token is only 32 characters
 		if(strlen($newAuthorActivationToken) !== 32) {
-			throw(new RangeException("user activation token has to be 32"));
+			throw(new \RangeException("user activation token has to be 32"));
 		}
 		$this->authorActivationToken = $newAuthorActivationToken;
 	}
@@ -176,11 +176,11 @@ class author implements \JsonSerializable {
 		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
 		$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newAuthorAvatarUrl) === true) {
-			throw(new InvalidArgumentException("Avatar URL is empty or insecure"));
+			throw(new \InvalidArgumentException("Avatar URL is empty or insecure"));
 		}
 // verify the avatar will fit in the database
 		if(strlen($newAuthorAvatarUrl) > 255) {
-			throw(new RangeException("Avatar is too large"));
+			throw(new \RangeException("Avatar is too large"));
 		}
 // store the avatar
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
@@ -199,11 +199,11 @@ class author implements \JsonSerializable {
 		$newAuthorEmail = trim($newAuthorEmail);
 		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
 		if(empty($newAuthorEmail) === true) {
-			throw(new InvalidArgumentException("Author email is empty or insecure"));
+			throw(new \InvalidArgumentException("Author email is empty or insecure"));
 		}
 // verify the email will fit in the database
 		if(strlen($newAuthorEmail) > 128) {
-			throw(new RangeException("Author email is too large"));
+			throw(new \RangeException("Author email is too large"));
 		}
 // store the email
 		$this->authorEmail = $newAuthorEmail;
@@ -230,16 +230,16 @@ class author implements \JsonSerializable {
 //enforce that the hash is properly formatted
 		$newAuthorHash = trim($newAuthorHash);
 		if(empty($newAuthorHash) === true) {
-			throw(new InvalidArgumentException("author password hash empty or insecure"));
+			throw(new \InvalidArgumentException("author password hash empty or insecure"));
 		}
 //enforce the hash is really an Argon hash
 		$authorHashInfo = password_get_info($newAuthorHash);
 		if($authorHashInfo["password"] !== "password12") {
-			throw(new InvalidArgumentException("author hash is not a valid hash"));
+			throw(new \InvalidArgumentException("author hash is not a valid hash"));
 		}
 //enforce that the hash is exactly 97 characters.
 		if(strlen($newAuthorHash) !== 97) {
-			throw(new RangeException("author hash must be 97 characters"));
+			throw(new \RangeException("author hash must be 97 characters"));
 		}
 //store the hash
 		$this->authorHash = $newAuthorHash;
@@ -263,11 +263,11 @@ class author implements \JsonSerializable {
 		$newAuthorUsername = trim($newAuthorUsername);
 		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newAuthorUsername) === true) {
-			throw(new InvalidArgumentException("Username is empty or insecure"));
+			throw(new \InvalidArgumentException("Username is empty or insecure"));
 		}
 		// verify the at handle will fit in the database
 		if(strlen($newAuthorUsername) > 32) {
-			throw(new RangeException("Username is too large"));
+			throw(new \RangeException("Username is too large"));
 		}
 		// store the at handle
 		$this->authorUsername = $newAuthorUsername;

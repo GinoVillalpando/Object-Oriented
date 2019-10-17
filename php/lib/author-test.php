@@ -1,5 +1,6 @@
 <?php
 //load author class
+require_once "..\vendor\autoload.php";
 require_once "..\Classes\author.php";
 
 use GinoVillalpando\ObjectOriented\author;
