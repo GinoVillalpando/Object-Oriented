@@ -3,7 +3,7 @@ namespace GinoVillalpando\ObjectOriented;
 
 require_once ("autoload.php");
 
-require_once(dirname(__DIR__, 1) . "/Classes/autoload.php");
+require_once(dirname(__DIR__, 1) . "/Classes/author.php");
 
 use \Ramsey\Uuid\Uuid;
 /**
@@ -24,7 +24,7 @@ trait ValidateUuid {
 	 *
 	 * @param string|Uuid $newUuid uuid to validate
 	 * @return Uuid object with validated uuid
-	 * @throws InvalidArgumentException if $newUuid is not a valid uuid
+	 * @throws \InvalidArgumentException if $newUuid is not a valid uuid
 	 * @throws \RangeException if $newUuid is not a valid uuid v4
 	 **/
 	private static function validateUuid($newUuid) : Uuid {
