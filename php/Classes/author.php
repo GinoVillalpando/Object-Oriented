@@ -127,7 +127,7 @@ class author implements \JsonSerializable {
 			throw(new \RangeException("user activation is not valid"));
 		}
 //make sure user activation token is only 32 characters
-		if(strlen($newAuthorActivationToken) !== 8) {
+		if(strlen($newAuthorActivationToken) !== 32) {
 			throw(new \RangeException("user activation token has to be 32"));
 		}
 		$this->authorActivationToken = $newAuthorActivationToken;
