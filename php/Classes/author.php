@@ -69,7 +69,7 @@ class author implements \JsonSerializable {
 
 			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 97, $exception));
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -93,7 +93,7 @@ class author implements \JsonSerializable {
 		try {
 			$uuid = self::validateUuid($newAuthorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			$exceptionType = get_class($exception);
+				$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 // convert and store the author id
@@ -161,23 +161,23 @@ class author implements \JsonSerializable {
 	 * @throws \TypeError if $newAvatar is not a string
 	 **/
 	public function setAuthorAvatarUrl(?string $newAuthorAvatarUrl): void {
-		//if $authorAvatarUrl is null return it right away
-		if($newAuthorAvatarUrl === null) {
-			$this->authorAvatarUrl = null;
-			return;
-		}
+			//if $authorAvatarUrl is null return it right away
+			if($newAuthorAvatarUrl === null) {
+				$this->authorAvatarUrl = null;
+				return;
+			}
 // verify the avatar is secure
-		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
-		$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newAuthorAvatarUrl) === true) {
-			throw(new \InvalidArgumentException("Avatar URL is empty or insecure"));
-		}
+			$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
+			$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+			if(empty($newAuthorAvatarUrl) === true) {
+				throw(new \InvalidArgumentException("Avatar URL is empty or insecure"));
+			}
 // verify the avatar will fit in the database
-		if(strlen($newAuthorAvatarUrl) > 255) {
-			throw(new \RangeException("Avatar is too large"));
-		}
+			if(strlen($newAuthorAvatarUrl) > 255) {
+				throw(new \RangeException("Avatar is too large"));
+			}
 // store the avatar
-		$this->authorAvatarUrl = $newAuthorAvatarUrl;
+			$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	}
 
 	/**
@@ -265,6 +265,25 @@ class author implements \JsonSerializable {
 		// store the Username
 		$this->authorUsername = $newAuthorUsername;
 	}
+	/**
+	 * inserts this author into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function insert(\PDO $pdo) : void {
+
+		// create query template
+		$query = "INSERT INTO author (authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) VALUES (:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorUsername)";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holders in the template
+		$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken, "authorAvatarUrl" => $this->authorAvatarUrl, "authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash, "authorUsername => $this->authorUsername"];
+		$statement->execute($parameters);
+	}
+
+
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
 		$fields["authorId"] = $this->authorId->toString();
