@@ -275,7 +275,8 @@ class author implements \JsonSerializable {
 	public function insert(\PDO $pdo) : void {
 
 		// create query template
-		$query = "INSERT INTO author (authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) VALUES (:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorUsername)";
+		$query = "INSERT INTO author (authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername)
+ 		VALUES (:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorUsername)";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holders in the template
@@ -311,7 +312,7 @@ class author implements \JsonSerializable {
 		// create query temp.
 		$query = "UPDATE author SET authorId = :authorId, authorActivationToken = :authorActivationToken, 
     authorAvatarUrl = :authorAvatarUrl, 
-    authorEmail = :authorEmail, authorHash = :authorHash, authorUsername = :authorUsername";
+    authorEmail = :authorEmail, authorHash = :authorHash, authorUsername = :authorUsername WHERE authorId = :authorId";
 		$statement = $pdo->prepare($query);
 
 		$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken,
@@ -326,7 +327,7 @@ class author implements \JsonSerializable {
 	 * @param  \PDO $pdo PDO connection object
 	 * @param Uuid | string $authorId author id to search for
 	 * @return author | null author found or null if not found
-	 * @throws \PDOExceptionwhen mySQL related bad things happen
+	 * @throws \PDOException when mySQL related bad things happen
 	 * @throws \TypeError when a variable are not the correct data type
 	 */
 	public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?author {
@@ -338,7 +339,7 @@ class author implements \JsonSerializable {
 		}
 		// create query temp.
 		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername 
-		FROM author WHERE authorID = authorId";
+		FROM author WHERE authorId = authorId";
 		$statement = $pdo->prepare($query);
 
 		//bind the author Id to the place holder in the template
@@ -362,14 +363,14 @@ class author implements \JsonSerializable {
 	}
 
 	/**
-	 * get all authors
+	 * get all authors by username
 	 *
 	 * @param \PDO $pdo PDO Connection object
 	 * @return \SplFixedArray SplFixedArray of authors found or null if not found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 */
-	public static function getAllAuthors(\PDO $pdo) : \SplFixedArray {
+	public static function getAuthorByUsername (\PDO $pdo) : \SplFixedArray {
 		// create query temp.
 		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author";
 		$statement = $pdo->prepare($query);
@@ -380,10 +381,10 @@ class author implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row =$statement->fetch()) !== false) {
 			try {
-				$author = new Author($row["authorId"], $row["authorActivationToken"], $row[authorAvatarUrl], $row[authorEmail],
-				$row[authorHash], $row[authorUsername]);
+				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"],
+				$row["authorHash"], $row["authorUsername"]);
 				$authors[$authors->key()] = $author;
-				$author->next();
+				$authors->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw (new \PDOException($exception->getMessage(), 0, $exception));
@@ -391,7 +392,11 @@ class author implements \JsonSerializable {
 		}
 		return ($authors);
 	}
-
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
 		$fields["authorId"] = $this->authorId->toString();
