@@ -372,7 +372,7 @@ class author implements \JsonSerializable {
 	 */
 	public static function getAuthorByUsername (\PDO $pdo) : \SplFixedArray {
 		// create query temp.
-		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author";
+		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorUsername = :authorUsername";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
