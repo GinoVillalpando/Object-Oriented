@@ -370,7 +370,13 @@ class author implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 */
-	public static function getAuthorByUsername (\PDO $pdo) : \SplFixedArray {
+	public static function getAuthorByAuthorUsername (\PDO $pdo, $authorUsername) : \SplFixedArray {
+		//sanitize the username before searching
+		$authorUsername = trim($authorUsername);
+		$authorUsername = filter_var($authorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($authorUsername) === true) {
+			throw(new \PDOException("Username is invalid"));
+		}
 		// create query temp.
 		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorUsername = :authorUsername";
 		$statement = $pdo->prepare($query);
@@ -381,7 +387,8 @@ class author implements \JsonSerializable {
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row =$statement->fetch()) !== false) {
 			try {
-				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"],
+				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"],
+					$row["authorEmail"],
 				$row["authorHash"], $row["authorUsername"]);
 				$authors[$authors->key()] = $author;
 				$authors->next();
